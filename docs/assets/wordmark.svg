@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 132" width="520" height="132" role="img" aria-label="mcp-gauntlet: Your agent reads every word a server sends it.">
+<rect width="520" height="132" rx="14" fill="#131829"/>
+<rect x="63.400000000000006" y="30" width="44" height="9" fill="#e7ebf3"/>
+<rect x="63.400000000000006" y="45" width="31" height="9" fill="#ffe14d"/>
+<rect x="63.400000000000006" y="60" width="38" height="9" fill="#e7ebf3"/>
+<text x="125.4" y="66" font-family="ui-monospace, 'Cascadia Mono', 'SF Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="46" fill="#e7ebf3" font-weight="700" textLength="331.2" lengthAdjust="spacingAndGlyphs" xml:space="preserve">mcp-gauntlet</text>
+<rect x="202.0" y="88" width="269.0" height="22" rx="2" fill="#ffe14d"/>
+<text x="53.0" y="104" font-family="ui-monospace, 'Cascadia Mono', 'SF Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="15" fill="#9ca7bf" textLength="153.0" lengthAdjust="spacingAndGlyphs" xml:space="preserve">Your agent reads </text>
+<text x="206.0" y="104" font-family="ui-monospace, 'Cascadia Mono', 'SF Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="15" fill="#131829" font-weight="600" textLength="261.0" lengthAdjust="spacingAndGlyphs" xml:space="preserve">every word a server sends it.</text>
+</svg>
