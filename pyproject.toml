@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-gauntlet"
+version = "0.1.0"
+description = "A deliberately hostile MCP server for testing whether your agent follows instructions it should not."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "TMHSDigital" }]
+keywords = ["mcp", "security", "prompt-injection", "red-team", "agents"]
+dependencies = []
+
+[project.scripts]
+mcp-gauntlet = "mcp_gauntlet.cli:main"
+
+[project.urls]
+Repository = "https://github.com/TMHSDigital/mcp-gauntlet"
+
+[tool.setuptools.packages.find]
+where = ["src"]
