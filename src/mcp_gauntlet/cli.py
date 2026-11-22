@@ -44,11 +44,13 @@ def _cmd_serve(args: argparse.Namespace) -> int:
     return 0
 
 
-def _timestamp(value: str) -> datetime:
+def _timestamp(value: object) -> datetime:
     try:
+        if not isinstance(value, str):  # a log line can hold any JSON value as its ts
+            raise ValueError("not a string")
         # Explicit replacement also supports the project's Python 3.10 minimum.
         return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone()
-    except ValueError as exc:
+    except (ValueError, OverflowError, OSError) as exc:
         raise argparse.ArgumentTypeError("expected an ISO 8601 timestamp") from exc
 
 

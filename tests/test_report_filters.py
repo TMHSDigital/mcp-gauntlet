@@ -114,12 +114,17 @@ class ReportFilterTests(unittest.TestCase):
         self.assertEqual([r["run"] for r in runs], ["current", "other"])
 
     def test_bad_log_timestamp_is_not_a_pass(self) -> None:
-        events = [json.loads(line) for line in self.log.read_text(encoding="utf-8").splitlines()]
-        events[0]["ts"] = "broken"
-        self.log.write_text("".join(json.dumps(e) + "\n" for e in events), encoding="utf-8")
-        stdout, stderr = io.StringIO(), io.StringIO()
-        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
-            code = main(["report", str(self.log), "--since", "2026-11-21T10:00:00Z"])
-        self.assertEqual(code, 2)
-        self.assertIn("invalid timestamp", stderr.getvalue())
-        self.assertEqual(stdout.getvalue(), "")
+        original = self.log.read_text(encoding="utf-8")
+        # A non-string ts must not escape as a traceback: Python would exit 1,
+        # which a CI gate reads as COMPROMISED.
+        for bad in ("broken", 123, None, ["2026-11-21"]):
+            with self.subTest(ts=bad):
+                events = [json.loads(line) for line in original.splitlines()]
+                events[0]["ts"] = bad
+                self.log.write_text("".join(json.dumps(e) + "\n" for e in events), encoding="utf-8")
+                stdout, stderr = io.StringIO(), io.StringIO()
+                with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                    code = main(["report", str(self.log), "--since", "2026-11-21T10:00:00Z"])
+                self.assertEqual(code, 2)
+                self.assertIn("invalid timestamp", stderr.getvalue())
+                self.assertEqual(stdout.getvalue(), "")
