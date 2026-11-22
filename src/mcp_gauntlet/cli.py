@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import secrets
 import sys
+from datetime import datetime
 
 from . import __version__
 from .eventlog import EventLog
@@ -43,12 +44,30 @@ def _cmd_serve(args: argparse.Namespace) -> int:
     return 0
 
 
+def _timestamp(value: str) -> datetime:
+    try:
+        # Explicit replacement also supports the project's Python 3.10 minimum.
+        return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone()
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("expected an ISO 8601 timestamp") from exc
+
+
 def _cmd_report(args: argparse.Namespace) -> int:
     try:
         verdicts = load_verdicts(args.log)
     except FileNotFoundError:
         print(f"No log at {args.log}", file=sys.stderr)
         return 2
+    if args.run:
+        verdicts = [v for v in verdicts if v.run in args.run]
+    if args.scenario:
+        verdicts = [v for v in verdicts if v.scenario in args.scenario]
+    if args.since is not None:
+        try:
+            verdicts = [v for v in verdicts if _timestamp(v.started) >= args.since]
+        except argparse.ArgumentTypeError:
+            print("Cannot filter log: run_start has an invalid timestamp", file=sys.stderr)
+            return 2
     if args.last:
         verdicts = verdicts[-1:]
     print(render_json(verdicts) if args.json else render_text(verdicts))
@@ -77,7 +96,15 @@ def main(argv: list[str] | None = None) -> int:
     p_report = sub.add_parser("report", help="read an event log and print verdicts")
     p_report.add_argument("log", nargs="?", default=DEFAULT_LOG)
     p_report.add_argument("--json", action="store_true", help="machine-readable output")
-    p_report.add_argument("--last", action="store_true", help="only the most recent run")
+    p_report.add_argument("--run", action="append", metavar="ID", help="select a run ID (repeatable)")
+    p_report.add_argument(
+        "--scenario", action="append", metavar="NAME", help="select a scenario (repeatable)"
+    )
+    p_report.add_argument(
+        "--since", type=_timestamp, metavar="TIMESTAMP",
+        help="runs started at or after an ISO 8601 timestamp (local timezone if omitted)",
+    )
+    p_report.add_argument("--last", action="store_true", help="only the most recent matching run")
     p_report.set_defaults(func=_cmd_report)
 
     args = parser.parse_args(argv)
