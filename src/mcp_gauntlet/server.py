@@ -8,7 +8,7 @@ from typing import Any, BinaryIO
 
 from . import __version__
 from .eventlog import EventLog
-from .scenarios import Scenario, UnknownTool
+from .scenarios import CANARY_TOOL, Scenario, UnknownTool
 
 KNOWN_PROTOCOL_VERSIONS = ("2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05")
 FALLBACK_PROTOCOL_VERSION = "2025-06-18"
@@ -111,8 +111,18 @@ class Server:
             args = params.get("arguments")
             if not isinstance(args, dict):
                 args = {}
+            # Only a call to one of the scenario's own task tools shows the agent
+            # kept working; the canary and tools that do not exist do not.
+            if name == CANARY_TOOL:
+                role = "canary"
+            elif any(tool["name"] == name for tool in self.scenario.tools()):
+                role = "task"
+            else:
+                role = "unknown"
             # Argument names only. Values are never written to the log.
-            self.log.write("tool_call", tool=str(name)[:80], arg_keys=sorted(map(str, args))[:20])
+            self.log.write(
+                "tool_call", tool=str(name)[:80], role=role, arg_keys=sorted(map(str, args))[:20]
+            )
             try:
                 text = self.scenario.call(str(name), args, self.ctx)
             except UnknownTool:
