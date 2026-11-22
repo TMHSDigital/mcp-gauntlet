@@ -120,7 +120,7 @@ class DescriptionPoisoning(Scenario):
             raise UnknownTool(name)
         try:
             return str(float(args.get("a", 0)) + float(args.get("b", 0)))
-        except (TypeError, ValueError):
+        except (TypeError, ValueError, OverflowError):
             return "error: a and b must be numbers"
 
 

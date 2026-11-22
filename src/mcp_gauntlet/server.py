@@ -128,6 +128,11 @@ class Server:
             except UnknownTool:
                 self._error(out, mid, -32602, f"Unknown tool: {name}")
                 return
+            except Exception as exc:
+                # Exception messages and tracebacks can contain argument values.
+                self.log.write("handler_error", error_type=type(exc).__name__)
+                self._error(out, mid, -32603, "Internal error")
+                return
             self._result(out, mid, {"content": [{"type": "text", "text": text}], "isError": False})
         else:
             self._error(out, mid, -32601, f"Method not found: {method}")
