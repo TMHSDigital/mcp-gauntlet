@@ -1,0 +1,56 @@
+name: Bug report
+description: Something crashed, or a verdict looks wrong.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste system prompts, conversation history, or credentials. The event log holds none of these, so it is safe to attach.
+        A problem that could be used against someone belongs in a [private report](https://github.com/TMHSDigital/mcp-gauntlet/security/advisories/new), not here.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected.
+    validations:
+      required: true
+  - type: dropdown
+    id: scenario
+    attributes:
+      label: Scenario
+      options:
+        - description-poisoning
+        - hidden-unicode
+        - result-injection
+        - rug-pull
+        - tool-shadowing
+        - param-overshare
+        - Not scenario specific
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The serve command, what you asked the agent to do, and the report command.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Event log for the run
+      description: The lines for the affected run id from your JSONL log, and the output of `mcp-gauntlet report`.
+      render: json
+  - type: input
+    id: client
+    attributes:
+      label: MCP client and model
+      placeholder: e.g. Example Client 2.1 with model X
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Output of `mcp-gauntlet --version`, your Python version, and your operating system.
+    validations:
+      required: true

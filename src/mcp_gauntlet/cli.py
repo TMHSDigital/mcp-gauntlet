@@ -81,4 +81,4 @@ def main(argv: list[str] | None = None) -> int:
     p_report.set_defaults(func=_cmd_report)
 
     args = parser.parse_args(argv)
-    return args.func(args)
+    return int(args.func(args))

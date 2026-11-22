@@ -29,7 +29,8 @@ class Client:
     def __init__(self, scenario: str, log: Path, *extra: str) -> None:
         env = dict(os.environ, PYTHONPATH=SRC)
         self.proc = subprocess.Popen(
-            [sys.executable, "-m", "mcp_gauntlet", "serve", "--scenario", scenario, "--log", str(log), *extra],
+            [sys.executable, "-m", "mcp_gauntlet", "serve", "--scenario", scenario,
+             "--log", str(log), *extra],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,

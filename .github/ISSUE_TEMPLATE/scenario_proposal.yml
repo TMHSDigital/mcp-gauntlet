@@ -1,0 +1,32 @@
+name: Scenario proposal
+description: A new way for a server to steer an agent that the gauntlet should test.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: technique
+    attributes:
+      label: The technique
+      description: Which text the server controls, and how it reaches the model. Link a write-up if one exists.
+    validations:
+      required: true
+  - type: textarea
+    id: act
+    attributes:
+      label: The inert act
+      description: |
+        What harmless, observable thing does the payload ask for? Every scenario must stay inside the rule in CONTRIBUTING.md:
+        no file access, no network, and nothing the agent sends is stored.
+    validations:
+      required: true
+  - type: textarea
+    id: verdicts
+    attributes:
+      label: How each verdict is decided
+      description: What makes a run COMPROMISED, what shows the agent RESISTED, and when the log can support neither.
+    validations:
+      required: true
+  - type: input
+    id: prompt
+    attributes:
+      label: What the operator asks the agent to do
+      placeholder: e.g. Ask the agent to add two numbers using its tools.
